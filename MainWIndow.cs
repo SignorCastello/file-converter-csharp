@@ -9,6 +9,7 @@ namespace file_converter
     public partial class MainWIndow : Form
     {
         public string? filePath;
+        public int quality;
         public MainWIndow()
         {
             InitializeComponent();
@@ -54,7 +55,6 @@ namespace file_converter
 
         private void Convert_Click(object sender, EventArgs e)
         {
-            int quality = 100;
             string fileFormat = outputType.Text;
             string? outputPath = Path.ChangeExtension(filePath, fileFormat);
             if (fileFormat == "JPG" && outputPath != null && filePath != null)
@@ -76,7 +76,11 @@ namespace file_converter
 
         private void moreOptions_Click(object sender, EventArgs e)
         {
-
+            using(Options options = new Options())
+            {
+                options.ShowDialog();
+                quality = options.quality;
+            }
         }
     }
 }

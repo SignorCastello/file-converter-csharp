@@ -12,9 +12,16 @@ namespace file_converter
 {
     public partial class Options : Form
     {
+        public int quality { get; private set; }
         public Options()
         {
             InitializeComponent();
+        }
+
+        public void optionClose_Click(object sender, EventArgs e)
+        {
+            quality = JPGqualitySlider.Value * 10; //so 10 gets to 100
+            this.Close();
         }
     }
 }

@@ -28,17 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            trackBar1 = new TrackBar();
+            JPGqualitySlider = new TrackBar();
             textBox1 = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            optionClose = new Button();
+            ((System.ComponentModel.ISupportInitialize)JPGqualitySlider).BeginInit();
             SuspendLayout();
             // 
-            // trackBar1
+            // JPGqualitySlider
             // 
-            trackBar1.Location = new Point(12, 30);
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(130, 56);
-            trackBar1.TabIndex = 0;
+            JPGqualitySlider.Location = new Point(12, 30);
+            JPGqualitySlider.Name = "JPGqualitySlider";
+            JPGqualitySlider.Size = new Size(130, 56);
+            JPGqualitySlider.TabIndex = 0;
             // 
             // textBox1
             // 
@@ -48,23 +49,35 @@
             textBox1.TabIndex = 1;
             textBox1.Text = "JPG Quality";
             // 
+            // optionClose
+            // 
+            optionClose.Location = new Point(129, 185);
+            optionClose.Name = "optionClose";
+            optionClose.Size = new Size(94, 29);
+            optionClose.TabIndex = 2;
+            optionClose.Text = "OK.";
+            optionClose.UseVisualStyleBackColor = true;
+            optionClose.Click += optionClose_Click;
+            // 
             // Options
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(365, 226);
+            Controls.Add(optionClose);
             Controls.Add(textBox1);
-            Controls.Add(trackBar1);
+            Controls.Add(JPGqualitySlider);
             Name = "Options";
             Text = "Options";
-            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)JPGqualitySlider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private TrackBar trackBar1;
+        private TrackBar JPGqualitySlider;
         private TextBox textBox1;
+        private Button optionClose;
     }
 }
