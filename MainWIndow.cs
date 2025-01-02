@@ -6,10 +6,10 @@ using SixLabors.ImageSharp.Formats.Png;
 
 namespace file_converter
 {
-    public partial class Form1 : Form
+    public partial class MainWIndow : Form
     {
         public string? filePath;
-        public Form1()
+        public MainWIndow()
         {
             InitializeComponent();
         }
@@ -57,7 +57,7 @@ namespace file_converter
             int quality = 100;
             string fileFormat = outputType.Text;
             string? outputPath = Path.ChangeExtension(filePath, fileFormat);
-            if(fileFormat == "JPG" && outputPath != null && filePath != null)
+            if (fileFormat == "JPG" && outputPath != null && filePath != null)
             {
                 using (var img = SixLabors.ImageSharp.Image.Load(filePath))
                 {
@@ -72,6 +72,11 @@ namespace file_converter
                 }
             }
             MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+        }
+
+        private void moreOptions_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

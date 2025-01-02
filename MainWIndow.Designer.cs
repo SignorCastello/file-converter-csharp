@@ -1,6 +1,6 @@
 ﻿namespace file_converter
 {
-    partial class Form1
+    partial class MainWIndow
     {
         /// <summary>
         ///  Required designer variable.
@@ -33,6 +33,7 @@
             textBox1 = new TextBox();
             tipoFile = new TextBox();
             Convert = new Button();
+            moreOptions = new Button();
             SuspendLayout();
             // 
             // listBox1
@@ -87,11 +88,22 @@
             Convert.UseVisualStyleBackColor = true;
             Convert.Click += Convert_Click;
             // 
+            // moreOptions
+            // 
+            moreOptions.Location = new Point(620, 384);
+            moreOptions.Name = "moreOptions";
+            moreOptions.Size = new Size(94, 29);
+            moreOptions.TabIndex = 5;
+            moreOptions.Text = "Options...";
+            moreOptions.UseVisualStyleBackColor = true;
+            moreOptions.Click += moreOptions_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(moreOptions);
             Controls.Add(Convert);
             Controls.Add(tipoFile);
             Controls.Add(textBox1);
@@ -110,5 +122,6 @@
         private TextBox textBox1;
         private TextBox tipoFile;
         private Button Convert;
+        private Button moreOptions;
     }
 }
