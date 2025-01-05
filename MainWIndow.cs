@@ -4,12 +4,14 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
+using FFMpegCore;
 
 namespace file_converter
 {
     public partial class MainWIndow : Form
     {
         public string? filePath;
+        public string file;
         public int quality;
         public bool hasQualityChanged;
         public MainWIndow()
@@ -52,18 +54,27 @@ namespace file_converter
             {
                 //you selected an image
                 tipoFile.Text = "IMAGE";
-                outputType.Items.AddRange(new string[]{"JPG", "PNG", "WEBP"});
-                if(Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
+                outputType.Items.AddRange(["JPG", "PNG", "WEBP"]);
+                if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                 {
                     outputType.Text = "JPG";
                 }
-                if(Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
+                if (Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
                 {
                     outputType.Text = "PNG";
                 }
             }
+            if (Path.GetExtension(selectedFileName)?.ToLower() == ".mp4" || Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm")
+            {
+                tipoFile.Text = "VIDEO";
+                outputType.Items.AddRange(["MP4", "MKV", "AVI"]);
+                if (Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm" || Path.GetExtension(selectedFileName)?.ToLower() == ".avi")
+                {
+                    outputType.Text = "MP4";
+                }
+            }
         }
-        private bool isImage(string filePath)
+        private bool IsImage(string filePath)
         {
             if (Path.GetExtension(filePath)?.ToLower() == ".png" || Path.GetExtension(filePath)?.ToLower() == ".jpg" || Path.GetExtension(filePath)?.ToLower() == ".webp")
             {
@@ -71,6 +82,15 @@ namespace file_converter
             }
             return false;
         }
+        private bool IsVideo(string filePath)
+        {
+            if (Path.GetExtension(filePath)?.ToLower() == ".mp4" || Path.GetExtension(filePath)?.ToLower() == ".mkv" || Path.GetExtension(filePath)?.ToLower() == ".webm")
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void Convert_Click(object sender, EventArgs e)
         {
             if (hasQualityChanged == false) //default value for quality
@@ -79,9 +99,10 @@ namespace file_converter
             }
             string fileFormat = outputType.Text.ToLower(); //so the extension is .jpg and not .JPG
             string? outputPath = Path.ChangeExtension(filePath, fileFormat);
-            if(filePath != null && outputPath != null)
+            if (filePath != null && outputPath != null)
             {
-                if (isImage(filePath))
+                //images
+                if (IsImage(filePath))
                 {
                     using (var img = SixLabors.ImageSharp.Image.Load(filePath))
                     {
@@ -89,15 +110,36 @@ namespace file_converter
                         {
                             case "jpg":
                                 img.Save(outputPath, new JpegEncoder() { Quality = quality });
-                                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                if (File.Exists(outputPath))
+                                {
+                                    MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Failed to convert.");
+                                }
                                 break;
                             case "png":
                                 img.Save(outputPath, new PngEncoder());
-                                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                if (File.Exists(outputPath))
+                                {
+                                    MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Failed to convert.");
+                                }
                                 break;
                             case "webp":
                                 img.Save(outputPath, new WebpEncoder());
-                                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                if (File.Exists(outputPath))
+                                {
+                                    MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Failed to convert.");
+                                }
                                 break;
                             default:
                                 MessageBox.Show("Invalid output format");
@@ -105,14 +147,97 @@ namespace file_converter
                         }
                     }
                 }
+                //now for the videos
+                if (IsVideo(filePath))
+                {
+                    switch (fileFormat)
+                    {
+                        case "mp4":
+                            MessageBox.Show("Your file is now exporting. Please wait...");
+                            FFMpegArguments
+                                .FromFileInput(filePath)
+                                .OutputToFile(outputPath, overwrite: true, options => options
+                                    .WithFastStart()
+                                    .WithVideoCodec("libx264")
+                                    .WithAudioCodec("aac")
+                                )
+                                .ProcessSynchronously();
+                            if (File.Exists(outputPath))
+                            {
+                                MessageBox.Show("Your file has been converted!");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                            }
+                            break;
+                        case "mkv":
+                            MessageBox.Show("Your file is now exporting. Please wait...");
+                            FFMpegArguments
+                                .FromFileInput(filePath)
+                                .OutputToFile(outputPath, overwrite: true, options => options
+                                    .WithFastStart()
+                                    .WithVideoCodec("libx264")
+                                    .WithAudioCodec("aac")
+                                )
+                                .ProcessSynchronously();
+                            if (File.Exists(outputPath))
+                            {
+                                MessageBox.Show("Your file has been converted!");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                            }
+                            break;
+                        case "avi":
+                            MessageBox.Show("Your file is now exporting. Please wait...");
+                            FFMpegArguments
+                                .FromFileInput(filePath)
+                                .OutputToFile(outputPath, overwrite: true, options => options
+                                    .WithFastStart()
+                                    .WithVideoCodec("libx264")
+                                    .WithAudioCodec("aac")
+                                )
+                                .ProcessSynchronously();
+                            if (File.Exists(outputPath))
+                            {
+                                MessageBox.Show("Your file has been converted!");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                            }
+                            break;
+                    }
+                }
             }
         }
         private void moreOptions_Click(object sender, EventArgs e)
         {
-            using(Options options = new Options())
+            using (Options options = new Options())
             {
                 options.ShowDialog();
                 quality = options.quality;
+            }
+        }
+
+        private void browse_button_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = openFileDialog.FileName;
+                    var fileStream = openFileDialog.OpenFile();
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        file = reader.ReadToEnd();
+                        string fileName = Path.GetFileName(filePath);
+                        listBox1.Items.Add(fileName);
+                    }
+                }
             }
         }
     }
