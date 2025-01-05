@@ -52,7 +52,6 @@
             // outputType
             // 
             outputType.FormattingEnabled = true;
-            outputType.Items.AddRange(new object[] { "JPG", "PNG" });
             outputType.Location = new Point(463, 303);
             outputType.Name = "outputType";
             outputType.Size = new Size(151, 27);
@@ -98,7 +97,7 @@
             moreOptions.UseVisualStyleBackColor = true;
             moreOptions.Click += moreOptions_Click;
             // 
-            // Form1
+            // MainWIndow
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -109,7 +108,7 @@
             Controls.Add(textBox1);
             Controls.Add(outputType);
             Controls.Add(listBox1);
-            Name = "Form1";
+            Name = "MainWIndow";
             Text = "Form1";
             ResumeLayout(false);
             PerformLayout();

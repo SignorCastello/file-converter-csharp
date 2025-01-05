@@ -3,6 +3,7 @@ using System.Windows.Forms.VisualStyles;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace file_converter
 {
@@ -47,11 +48,12 @@ namespace file_converter
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string? selectedFileName = listBox1.SelectedItem as string;
-            if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
+            if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
             {
                 //you selected an image
                 tipoFile.Text = "IMAGE";
-                if(Path.GetExtension(selectedFileName)?.ToLower() == ".png")
+                outputType.Items.AddRange(new string[]{"JPG", "PNG", "WEBP"});
+                if(Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                 {
                     outputType.Text = "JPG";
                 }
@@ -61,32 +63,50 @@ namespace file_converter
                 }
             }
         }
-
+        private bool isImage(string filePath)
+        {
+            if (Path.GetExtension(filePath)?.ToLower() == ".png" || Path.GetExtension(filePath)?.ToLower() == ".jpg" || Path.GetExtension(filePath)?.ToLower() == ".webp")
+            {
+                return true;
+            }
+            return false;
+        }
         private void Convert_Click(object sender, EventArgs e)
         {
-            if(hasQualityChanged == false) //default value for quality
+            if (hasQualityChanged == false) //default value for quality
             {
                 quality = 90;
             }
-            string fileFormat = outputType.Text;
-            string ? outputPath = Path.ChangeExtension(filePath, fileFormat);
-            if (fileFormat == "JPG" && outputPath != null && filePath != null)
+            string fileFormat = outputType.Text.ToLower(); //so the extension is .jpg and not .JPG
+            string? outputPath = Path.ChangeExtension(filePath, fileFormat);
+            if(filePath != null && outputPath != null)
             {
-                using (var img = SixLabors.ImageSharp.Image.Load(filePath))
+                if (isImage(filePath))
                 {
-                    img.Save(outputPath, new JpegEncoder { Quality = quality });
+                    using (var img = SixLabors.ImageSharp.Image.Load(filePath))
+                    {
+                        switch (fileFormat) //i don't know why but i'm proud of this.
+                        {
+                            case "jpg":
+                                img.Save(outputPath, new JpegEncoder() { Quality = quality });
+                                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                break;
+                            case "png":
+                                img.Save(outputPath, new PngEncoder());
+                                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                break;
+                            case "webp":
+                                img.Save(outputPath, new WebpEncoder());
+                                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                                break;
+                            default:
+                                MessageBox.Show("Invalid output format");
+                                return;
+                        }
+                    }
                 }
             }
-            if (fileFormat == "PNG" && outputPath != null && filePath != null)
-            {
-                using (var img = SixLabors.ImageSharp.Image.Load(filePath))
-                {
-                    img.Save(outputPath, new PngEncoder());
-                }
-            }
-            MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
         }
-
         private void moreOptions_Click(object sender, EventArgs e)
         {
             using(Options options = new Options())
