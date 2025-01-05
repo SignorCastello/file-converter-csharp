@@ -10,6 +10,7 @@ namespace file_converter
     {
         public string? filePath;
         public int quality;
+        public bool hasQualityChanged;
         public MainWIndow()
         {
             InitializeComponent();
@@ -50,13 +51,25 @@ namespace file_converter
             {
                 //you selected an image
                 tipoFile.Text = "IMAGE";
+                if(Path.GetExtension(selectedFileName)?.ToLower() == ".png")
+                {
+                    outputType.Text = "JPG";
+                }
+                if(Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
+                {
+                    outputType.Text = "PNG";
+                }
             }
         }
 
         private void Convert_Click(object sender, EventArgs e)
         {
+            if(hasQualityChanged == false) //default value for quality
+            {
+                quality = 90;
+            }
             string fileFormat = outputType.Text;
-            string? outputPath = Path.ChangeExtension(filePath, fileFormat);
+            string ? outputPath = Path.ChangeExtension(filePath, fileFormat);
             if (fileFormat == "JPG" && outputPath != null && filePath != null)
             {
                 using (var img = SixLabors.ImageSharp.Image.Load(filePath))

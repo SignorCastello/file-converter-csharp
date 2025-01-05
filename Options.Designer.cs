@@ -37,9 +37,11 @@
             // JPGqualitySlider
             // 
             JPGqualitySlider.Location = new Point(12, 30);
+            JPGqualitySlider.Minimum = 1;
             JPGqualitySlider.Name = "JPGqualitySlider";
             JPGqualitySlider.Size = new Size(130, 56);
             JPGqualitySlider.TabIndex = 0;
+            JPGqualitySlider.Value = 1;
             // 
             // textBox1
             // 
