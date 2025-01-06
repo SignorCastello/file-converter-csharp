@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using FFMpegCore;
 
+
 namespace file_converter
 {
     public partial class MainWIndow : Form
@@ -154,57 +155,54 @@ namespace file_converter
                     {
                         case "mp4":
                             MessageBox.Show("Your file is now exporting. Please wait...");
-                            FFMpegArguments
-                                .FromFileInput(filePath)
-                                .OutputToFile(outputPath, overwrite: true, options => options
-                                    .WithFastStart()
-                                    .WithVideoCodec("libx264")
-                                    .WithAudioCodec("aac")
-                                )
-                                .ProcessSynchronously();
-                            if (File.Exists(outputPath))
+                            try //my first try with error catching.
                             {
-                                MessageBox.Show("Your file has been converted!");
+                                FFMpegArguments
+                                    .FromFileInput(filePath)
+                                    .OutputToFile(outputPath, overwrite: true, options => options
+                                        .WithFastStart()
+                                        .WithVideoCodec("libx264")
+                                        .WithAudioCodec("aac")
+                                    )
+                                    .ProcessSynchronously();
                             }
-                            else
+                            catch (Exception ex)
                             {
                                 MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
                             }
                             break;
                         case "mkv":
                             MessageBox.Show("Your file is now exporting. Please wait...");
-                            FFMpegArguments
-                                .FromFileInput(filePath)
-                                .OutputToFile(outputPath, overwrite: true, options => options
-                                    .WithFastStart()
-                                    .WithVideoCodec("libx264")
-                                    .WithAudioCodec("aac")
-                                )
-                                .ProcessSynchronously();
-                            if (File.Exists(outputPath))
+                            try
                             {
-                                MessageBox.Show("Your file has been converted!");
+                                FFMpegArguments
+                                    .FromFileInput(filePath)
+                                    .OutputToFile(outputPath, overwrite: true, options => options
+                                        .WithFastStart()
+                                        .WithVideoCodec("libx264")
+                                        .WithAudioCodec("aac")
+                                    )
+                                    .ProcessSynchronously();
                             }
-                            else
+                            catch (Exception ex)
                             {
                                 MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
                             }
                             break;
                         case "avi":
                             MessageBox.Show("Your file is now exporting. Please wait...");
-                            FFMpegArguments
-                                .FromFileInput(filePath)
-                                .OutputToFile(outputPath, overwrite: true, options => options
-                                    .WithFastStart()
-                                    .WithVideoCodec("libx264")
-                                    .WithAudioCodec("aac")
-                                )
-                                .ProcessSynchronously();
-                            if (File.Exists(outputPath))
+                            try
                             {
-                                MessageBox.Show("Your file has been converted!");
+                                FFMpegArguments
+                                    .FromFileInput(filePath)
+                                    .OutputToFile(outputPath, overwrite: true, options => options
+                                        .WithFastStart()
+                                        .WithVideoCodec("libx264")
+                                        .WithAudioCodec("aac")
+                                    )
+                                    .ProcessSynchronously();
                             }
-                            else
+                            catch(Exception ex)
                             {
                                 MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
                             }
