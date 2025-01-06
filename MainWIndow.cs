@@ -15,6 +15,8 @@ namespace file_converter
         public string file;
         public int quality;
         public bool hasQualityChanged;
+        public bool IsCurrentFileImage;
+        public bool IsCurrentFileVideo;
         public MainWIndow()
         {
             InitializeComponent();
@@ -47,7 +49,7 @@ namespace file_converter
             }
 
         }
-
+        
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string? selectedFileName = listBox1.SelectedItem as string;
@@ -64,6 +66,7 @@ namespace file_converter
                 {
                     outputType.Text = "PNG";
                 }
+                IsCurrentFileImage = true; //this will be needed for the Options window. I don't know how to make this easier
             }
             if (Path.GetExtension(selectedFileName)?.ToLower() == ".mp4" || Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm")
             {
@@ -73,6 +76,7 @@ namespace file_converter
                 {
                     outputType.Text = "MP4";
                 }
+                IsCurrentFileVideo = true;
             }
         }
         private bool IsImage(string filePath)
@@ -215,6 +219,8 @@ namespace file_converter
         {
             using (Options options = new Options())
             {
+                options.IsCurrentFileImage = IsCurrentFileImage;
+                options.IsCurrentFileVideo = IsCurrentFileVideo;
                 options.ShowDialog();
                 quality = options.quality;
             }

@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             JPGqualitySlider = new TrackBar();
-            textBox1 = new TextBox();
+            JPGQualityLabel = new TextBox();
             optionClose = new Button();
+            amplificationLabel = new TextBox();
+            amplification = new TextBox();
             ((System.ComponentModel.ISupportInitialize)JPGqualitySlider).BeginInit();
             SuspendLayout();
             // 
@@ -43,13 +45,13 @@
             JPGqualitySlider.TabIndex = 0;
             JPGqualitySlider.Value = 1;
             // 
-            // textBox1
+            // JPGQualityLabel
             // 
-            textBox1.Location = new Point(148, 30);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(205, 27);
-            textBox1.TabIndex = 1;
-            textBox1.Text = "JPG Quality";
+            JPGQualityLabel.Location = new Point(148, 30);
+            JPGQualityLabel.Name = "JPGQualityLabel";
+            JPGQualityLabel.Size = new Size(205, 27);
+            JPGQualityLabel.TabIndex = 1;
+            JPGQualityLabel.Text = "JPG Quality";
             // 
             // optionClose
             // 
@@ -61,16 +63,34 @@
             optionClose.UseVisualStyleBackColor = true;
             optionClose.Click += optionClose_Click;
             // 
+            // amplificationLabel
+            // 
+            amplificationLabel.Location = new Point(148, 30);
+            amplificationLabel.Name = "amplificationLabel";
+            amplificationLabel.Size = new Size(205, 27);
+            amplificationLabel.TabIndex = 3;
+            amplificationLabel.Text = "Amplification (in dB)";
+            // 
+            // amplification
+            // 
+            amplification.Location = new Point(12, 30);
+            amplification.Name = "amplification";
+            amplification.Size = new Size(125, 27);
+            amplification.TabIndex = 4;
+            // 
             // Options
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(365, 226);
+            Controls.Add(amplification);
+            Controls.Add(amplificationLabel);
             Controls.Add(optionClose);
-            Controls.Add(textBox1);
+            Controls.Add(JPGQualityLabel);
             Controls.Add(JPGqualitySlider);
             Name = "Options";
             Text = "Options";
+            Load += Options_Load;
             ((System.ComponentModel.ISupportInitialize)JPGqualitySlider).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -79,7 +99,9 @@
         #endregion
 
         private TrackBar JPGqualitySlider;
-        private TextBox textBox1;
+        private TextBox JPGQualityLabel;
         private Button optionClose;
+        private TextBox amplificationLabel;
+        private TextBox amplification;
     }
 }
