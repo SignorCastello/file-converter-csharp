@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using FFMpegCore;
 using System.Diagnostics.Eventing.Reader;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Text;
 
 
 namespace file_converter
@@ -16,9 +17,12 @@ namespace file_converter
         public string? filePath;
         public string file;
         public int quality;
+        public double dBLevel = 0;
         public bool hasQualityChanged;
+        public bool hasAmplificationChanged;
         public bool IsCurrentFileImage;
         public bool IsCurrentFileVideo;
+        public bool IsCurrentFileAudio;
         public MainWIndow()
         {
             InitializeComponent();
@@ -56,6 +60,7 @@ namespace file_converter
         {
             IsCurrentFileImage = false;
             IsCurrentFileVideo = false;
+            IsCurrentFileAudio = false;
             string? selectedFileName = listBox1.SelectedItem as string;
             if (selectedFileName != null)
             {
@@ -84,11 +89,22 @@ namespace file_converter
                     }
                     IsCurrentFileVideo = true;
                 }
+                if(MimeTypes.GetMimeType(selectedFileName).StartsWith("audio/"))
+                {
+                    //you selected an audio file
+                    FileTypeLabel.Text = "AUDIO";
+                    outputType.Items.AddRange(["MP3", "OPUS"]);
+                    if(Path.GetExtension(selectedFileName).ToLower() != ".mp3")
+                    {
+                        outputType.Text = "MP3";
+                    }
+                    IsCurrentFileAudio = true;
+                }
             }
         }
         private bool IsImage(string filePath)
         {
-            if (Path.GetExtension(filePath)?.ToLower() == ".png" || Path.GetExtension(filePath)?.ToLower() == ".jpg" || Path.GetExtension(filePath)?.ToLower() == ".webp")
+            if (MimeTypes.GetMimeType(filePath).StartsWith("image/"))
             {
                 return true;
             }
@@ -96,7 +112,15 @@ namespace file_converter
         }
         private bool IsVideo(string filePath)
         {
-            if (Path.GetExtension(filePath)?.ToLower() == ".mp4" || Path.GetExtension(filePath)?.ToLower() == ".mkv" || Path.GetExtension(filePath)?.ToLower() == ".webm")
+            if (MimeTypes.GetMimeType(filePath).StartsWith("video/"))
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool IsAudio(string filePath)
+        {
+            if (MimeTypes.GetMimeType(filePath).StartsWith("audio/"))
             {
                 return true;
             }
@@ -116,11 +140,55 @@ namespace file_converter
                     )
                     .ProcessSynchronously();
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
             }
             MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+        }
+
+        private void FFmpegAudioConvert(string filePath, string outputPath, double dBLevel)
+        {
+            if (hasAmplificationChanged)
+            {
+                try
+                {
+                    FFMpegArguments
+                        .FromFileInput(filePath)
+                        .OutputToFile(outputPath, overwrite: true, options => options
+                            .WithFastStart()
+                            .WithAudioCodec("mp3")
+                            .WithCustomArgument($"-af volume={dBLevel}")
+                        )
+                        .ProcessSynchronously();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    MessageBox.Show(ex.Message);
+                }
+                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+            }
+            else
+            {
+                //this has been completely guessed. the library I am using is NOT documented well.
+                try
+                {
+                    FFMpegArguments
+                        .FromFileInput(filePath)
+                        .OutputToFile(outputPath, overwrite: true, options => options
+                            .WithFastStart()
+                            .WithAudioCodec("mp3")
+                        )
+                        .ProcessSynchronously();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    MessageBox.Show(ex.Message);
+                }
+                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+            }
         }
 
         private void Convert_Click(object sender, EventArgs e)
@@ -199,16 +267,29 @@ namespace file_converter
                             break;
                     }
                 }
+                if (IsAudio(filePath))
+                {
+                    switch (fileFormat)
+                    {
+                        case "mp3":
+                            FFmpegAudioConvert(filePath, outputPath, dBLevel);
+                            break;
+                    }
+                }
             }
         }
+
         private void moreOptions_Click(object sender, EventArgs e)
         {
             using (Options options = new Options())
             {
                 options.IsCurrentFileImage = IsCurrentFileImage;
                 options.IsCurrentFileVideo = IsCurrentFileVideo;
+                options.IsCurrentFileAudio = IsCurrentFileAudio;
                 options.ShowDialog();
+                hasAmplificationChanged = options.hasAmplificationChanged;
                 quality = options.quality;
+                dBLevel = options.dBLevel;
             }
         }
 

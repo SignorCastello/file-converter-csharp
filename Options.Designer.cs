@@ -73,7 +73,7 @@
             // 
             // amplification
             // 
-            amplification.Location = new Point(12, 30);
+            amplification.Location = new Point(17, 30);
             amplification.Name = "amplification";
             amplification.Size = new Size(125, 27);
             amplification.TabIndex = 4;

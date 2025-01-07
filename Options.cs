@@ -14,8 +14,9 @@ namespace file_converter
     {
         public bool IsCurrentFileImage = false;
         public bool IsCurrentFileVideo = false;
+        public bool IsCurrentFileAudio = false;
         public int quality;
-        public int dBLevel;
+        public double dBLevel;
         public bool hasQualityChanged = false;
         public bool hasAmplificationChanged = false;
         public Options()
@@ -29,6 +30,7 @@ namespace file_converter
             if (int.TryParse(amplification.Text, out int a))
             {
                 dBLevel = a;
+                hasAmplificationChanged = true;
             }
             hasQualityChanged = true;
             this.Close();
@@ -47,6 +49,11 @@ namespace file_converter
                 JPGQualityLabel.Visible = true;
             }
             if (IsCurrentFileVideo == true)
+            {
+                amplification.Visible = true;
+                amplificationLabel.Visible = true;
+            }
+            if (IsCurrentFileAudio == true)
             {
                 amplification.Visible = true;
                 amplificationLabel.Visible = true;
