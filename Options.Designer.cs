@@ -90,6 +90,7 @@
             Controls.Add(JPGqualitySlider);
             Name = "Options";
             Text = "Options";
+            FormClosed += Options_FormClosed;
             Load += Options_Load;
             ((System.ComponentModel.ISupportInitialize)JPGqualitySlider).EndInit();
             ResumeLayout(false);

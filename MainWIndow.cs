@@ -5,6 +5,8 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using FFMpegCore;
+using System.Diagnostics.Eventing.Reader;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace file_converter
@@ -49,34 +51,39 @@ namespace file_converter
             }
 
         }
-        
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            IsCurrentFileImage = false;
+            IsCurrentFileVideo = false;
             string? selectedFileName = listBox1.SelectedItem as string;
-            if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
+            if (selectedFileName != null)
             {
-                //you selected an image
-                tipoFile.Text = "IMAGE";
-                outputType.Items.AddRange(["JPG", "PNG", "WEBP"]);
-                if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
+                if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                 {
-                    outputType.Text = "JPG";
+                    //you selected an image
+                    FileTypeLabel.Text = "IMAGE";
+                    outputType.Items.AddRange(["JPG", "PNG", "WEBP"]);
+                    if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
+                    {
+                        outputType.Text = "JPG";
+                    }
+                    if (Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
+                    {
+                        outputType.Text = "PNG";
+                    }
+                    IsCurrentFileImage = true; //this will be needed for the Options window. I don't know how to make this easier
                 }
-                if (Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
+                if (Path.GetExtension(selectedFileName)?.ToLower() == ".mp4" || Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm")
                 {
-                    outputType.Text = "PNG";
+                    FileTypeLabel.Text = "VIDEO";
+                    outputType.Items.AddRange(["MP4", "MKV", "AVI"]);
+                    if (Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm" || Path.GetExtension(selectedFileName)?.ToLower() == ".avi")
+                    {
+                        outputType.Text = "MP4";
+                    }
+                    IsCurrentFileVideo = true;
                 }
-                IsCurrentFileImage = true; //this will be needed for the Options window. I don't know how to make this easier
-            }
-            if (Path.GetExtension(selectedFileName)?.ToLower() == ".mp4" || Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm")
-            {
-                tipoFile.Text = "VIDEO";
-                outputType.Items.AddRange(["MP4", "MKV", "AVI"]);
-                if (Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm" || Path.GetExtension(selectedFileName)?.ToLower() == ".avi")
-                {
-                    outputType.Text = "MP4";
-                }
-                IsCurrentFileVideo = true;
             }
         }
         private bool IsImage(string filePath)
@@ -94,6 +101,26 @@ namespace file_converter
                 return true;
             }
             return false;
+        }
+
+        private void FFmpegConvert(string filePath, string outputPath)
+        {
+            try //my first try with error catching.
+            {
+                FFMpegArguments
+                    .FromFileInput(filePath)
+                    .OutputToFile(outputPath, overwrite: true, options => options
+                        .WithFastStart()
+                        .WithVideoCodec("libx264")
+                        .WithAudioCodec("aac")
+                    )
+                    .ProcessSynchronously();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+            }
+            MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
         }
 
         private void Convert_Click(object sender, EventArgs e)
@@ -159,57 +186,16 @@ namespace file_converter
                     {
                         case "mp4":
                             MessageBox.Show("Your file is now exporting. Please wait...");
-                            try //my first try with error catching.
-                            {
-                                FFMpegArguments
-                                    .FromFileInput(filePath)
-                                    .OutputToFile(outputPath, overwrite: true, options => options
-                                        .WithFastStart()
-                                        .WithVideoCodec("libx264")
-                                        .WithAudioCodec("aac")
-                                    )
-                                    .ProcessSynchronously();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
-                            }
+                            FFmpegConvert(filePath, outputPath);
                             break;
+
                         case "mkv":
                             MessageBox.Show("Your file is now exporting. Please wait...");
-                            try
-                            {
-                                FFMpegArguments
-                                    .FromFileInput(filePath)
-                                    .OutputToFile(outputPath, overwrite: true, options => options
-                                        .WithFastStart()
-                                        .WithVideoCodec("libx264")
-                                        .WithAudioCodec("aac")
-                                    )
-                                    .ProcessSynchronously();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
-                            }
+                            FFmpegConvert(filePath, outputPath);
                             break;
                         case "avi":
                             MessageBox.Show("Your file is now exporting. Please wait...");
-                            try
-                            {
-                                FFMpegArguments
-                                    .FromFileInput(filePath)
-                                    .OutputToFile(outputPath, overwrite: true, options => options
-                                        .WithFastStart()
-                                        .WithVideoCodec("libx264")
-                                        .WithAudioCodec("aac")
-                                    )
-                                    .ProcessSynchronously();
-                            }
-                            catch(Exception ex)
-                            {
-                                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
-                            }
+                            FFmpegConvert(filePath, outputPath);
                             break;
                     }
                 }

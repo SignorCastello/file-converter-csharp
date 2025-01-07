@@ -32,12 +32,23 @@
             listBox1 = new ListBox();
             outputType = new ComboBox();
             textBox1 = new TextBox();
-            tipoFile = new TextBox();
+            FileTypeLabel = new TextBox();
             Convert = new Button();
             moreOptions = new Button();
             textBox2 = new TextBox();
             browse_button = new Button();
             SuspendLayout();
+            // 
+            // browse_button
+            // 
+            browse_button.BackColor = SystemColors.WindowText;
+            browse_button.Location = new Point(12, 409);
+            browse_button.Name = "browse_button";
+            browse_button.Size = new Size(284, 29);
+            browse_button.TabIndex = 7;
+            browse_button.Text = "Browse...";
+            browse_button.UseVisualStyleBackColor = false;
+            browse_button.Click += browse_button_Click;
             // 
             // listBox1
             // 
@@ -76,16 +87,16 @@
             textBox1.Text = "The selected file is...";
             textBox1.TextAlign = HorizontalAlignment.Center;
             // 
-            // tipoFile
+            // FileTypeLabel
             // 
-            tipoFile.BackColor = SystemColors.WindowText;
-            tipoFile.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            tipoFile.ForeColor = SystemColors.Window;
-            tipoFile.Location = new Point(478, 80);
-            tipoFile.Name = "tipoFile";
-            tipoFile.Size = new Size(125, 28);
-            tipoFile.TabIndex = 3;
-            tipoFile.TextAlign = HorizontalAlignment.Center;
+            FileTypeLabel.BackColor = SystemColors.WindowText;
+            FileTypeLabel.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            FileTypeLabel.ForeColor = SystemColors.Window;
+            FileTypeLabel.Location = new Point(478, 80);
+            FileTypeLabel.Name = "FileTypeLabel";
+            FileTypeLabel.Size = new Size(125, 28);
+            FileTypeLabel.TabIndex = 3;
+            FileTypeLabel.TextAlign = HorizontalAlignment.Center;
             // 
             // Convert
             // 
@@ -123,17 +134,6 @@
             textBox2.Text = "FILE CONVERTER";
             textBox2.TextAlign = HorizontalAlignment.Center;
             // 
-            // browse_button
-            // 
-            browse_button.BackColor = SystemColors.WindowText;
-            browse_button.Location = new Point(12, 409);
-            browse_button.Name = "browse_button";
-            browse_button.Size = new Size(284, 29);
-            browse_button.TabIndex = 7;
-            browse_button.Text = "Browse...";
-            browse_button.UseVisualStyleBackColor = false;
-            browse_button.Click += browse_button_Click;
-            // 
             // MainWIndow
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
@@ -144,7 +144,7 @@
             Controls.Add(textBox2);
             Controls.Add(moreOptions);
             Controls.Add(Convert);
-            Controls.Add(tipoFile);
+            Controls.Add(FileTypeLabel);
             Controls.Add(textBox1);
             Controls.Add(outputType);
             Controls.Add(listBox1);
@@ -160,7 +160,7 @@
         private ListBox listBox1;
         private ComboBox outputType;
         private TextBox textBox1;
-        private TextBox tipoFile;
+        private TextBox FileTypeLabel;
         private Button Convert;
         private Button moreOptions;
         private TextBox textBox2;
