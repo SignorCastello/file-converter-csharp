@@ -41,6 +41,7 @@
             // 
             // browse_button
             // 
+            browse_button.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             browse_button.BackColor = SystemColors.WindowText;
             browse_button.Location = new Point(12, 409);
             browse_button.Name = "browse_button";
@@ -53,6 +54,7 @@
             // listBox1
             // 
             listBox1.AllowDrop = true;
+            listBox1.Anchor = AnchorStyles.Left;
             listBox1.BackColor = SystemColors.WindowText;
             listBox1.ForeColor = SystemColors.Window;
             listBox1.FormattingEnabled = true;
@@ -67,6 +69,7 @@
             // 
             // outputType
             // 
+            outputType.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             outputType.BackColor = SystemColors.WindowText;
             outputType.ForeColor = SystemColors.Window;
             outputType.FormattingEnabled = true;
@@ -77,6 +80,7 @@
             // 
             // textBox1
             // 
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             textBox1.BackColor = SystemColors.WindowText;
             textBox1.BorderStyle = BorderStyle.None;
             textBox1.ForeColor = SystemColors.Control;
@@ -89,6 +93,7 @@
             // 
             // FileTypeLabel
             // 
+            FileTypeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             FileTypeLabel.BackColor = SystemColors.WindowText;
             FileTypeLabel.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             FileTypeLabel.ForeColor = SystemColors.Window;
@@ -100,6 +105,7 @@
             // 
             // Convert
             // 
+            Convert.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Convert.BackColor = SystemColors.WindowFrame;
             Convert.ForeColor = SystemColors.WindowText;
             Convert.Location = new Point(463, 336);
@@ -123,6 +129,7 @@
             // 
             // textBox2
             // 
+            textBox2.Anchor = AnchorStyles.Top;
             textBox2.BackColor = Color.Black;
             textBox2.BorderStyle = BorderStyle.None;
             textBox2.Font = new Font("Segoe UI Black", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -149,8 +156,12 @@
             Controls.Add(outputType);
             Controls.Add(listBox1);
             ForeColor = SystemColors.Control;
+            MaximizeBox = false;
+            MaximumSize = new Size(818, 497);
+            MinimumSize = new Size(818, 497);
             Name = "MainWIndow";
             Text = "File Converter";
+            Load += MainWIndow_Load;
             ResumeLayout(false);
             PerformLayout();
         }

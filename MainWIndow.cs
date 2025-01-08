@@ -8,6 +8,8 @@ using FFMpegCore;
 using System.Diagnostics.Eventing.Reader;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Text;
+using SixLabors.ImageSharp.Formats;
+using System.Diagnostics;
 
 
 namespace file_converter
@@ -26,6 +28,11 @@ namespace file_converter
         public MainWIndow()
         {
             InitializeComponent();
+        }
+
+        private void MainWIndow_Load(object sender, EventArgs e)
+        {
+            moreOptions.Visible = false;
         }
 
         private void listBox1_DragEnter(object sender, DragEventArgs e)
@@ -56,14 +63,27 @@ namespace file_converter
 
         }
 
+        private void OpenExceptionInNotepad(string content)
+        {
+            string tempFilePath = Path.Combine(Path.GetTempPath(), "converterlog.txt");
+            File.WriteAllText(tempFilePath, content);
+            Process.Start("notepad.exe", tempFilePath);
+        }
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             IsCurrentFileImage = false;
             IsCurrentFileVideo = false;
             IsCurrentFileAudio = false;
             string? selectedFileName = listBox1.SelectedItem as string;
+            if (selectedFileName == null)
+            {
+                moreOptions.Visible = false;
+                //the options button is now invisible
+            }
             if (selectedFileName != null)
             {
+                moreOptions.Visible = true;
                 if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                 {
                     //you selected an image
@@ -89,12 +109,16 @@ namespace file_converter
                     }
                     IsCurrentFileVideo = true;
                 }
-                if(MimeTypes.GetMimeType(selectedFileName).StartsWith("audio/"))
+                if (MimeTypes.GetMimeType(selectedFileName).StartsWith("audio/"))
                 {
                     //you selected an audio file
                     FileTypeLabel.Text = "AUDIO";
-                    outputType.Items.AddRange(["MP3", "OPUS"]);
-                    if(Path.GetExtension(selectedFileName).ToLower() != ".mp3")
+                    outputType.Items.AddRange(["MP3", "WAV"]);
+                    if (Path.GetExtension(selectedFileName).ToLower() != ".mp3")
+                    {
+                        outputType.Text = "MP3";
+                    }
+                    if (Path.GetExtension(selectedFileName).ToLower() == ".mp3")
                     {
                         outputType.Text = "MP3";
                     }
@@ -102,6 +126,7 @@ namespace file_converter
                 }
             }
         }
+
         private bool IsImage(string filePath)
         {
             if (MimeTypes.GetMimeType(filePath).StartsWith("image/"))
@@ -110,6 +135,7 @@ namespace file_converter
             }
             return false;
         }
+
         private bool IsVideo(string filePath)
         {
             if (MimeTypes.GetMimeType(filePath).StartsWith("video/"))
@@ -118,6 +144,7 @@ namespace file_converter
             }
             return false;
         }
+
         private bool IsAudio(string filePath)
         {
             if (MimeTypes.GetMimeType(filePath).StartsWith("audio/"))
@@ -127,24 +154,68 @@ namespace file_converter
             return false;
         }
 
+        private void ConvertImage(string filePath, string outputPath, string fileFormat)
+        {
+            if(filePath != null)
+            {
+                using (var img = SixLabors.ImageSharp.Image.Load(filePath))
+                {
+                    IImageEncoder encoder = fileFormat switch
+                    {
+                        "jpg" => new JpegEncoder { Quality = quality },
+                        "png" => new PngEncoder(),
+                        "webp" => new WebpEncoder(),
+                        _ => throw new InvalidOperationException("Unsupported format")
+                    };
+                    img.Save(outputPath, encoder);
+                    MessageBox.Show("Done.");
+                }
+            }
+        }
+
         private void FFmpegConvert(string filePath, string outputPath)
         {
-            try //my first try with error catching.
+            if (hasAmplificationChanged)
             {
-                FFMpegArguments
-                    .FromFileInput(filePath)
-                    .OutputToFile(outputPath, overwrite: true, options => options
-                        .WithFastStart()
-                        .WithVideoCodec("libx264")
-                        .WithAudioCodec("aac")
-                    )
-                    .ProcessSynchronously();
+                try
+                {
+                    FFMpegArguments
+                        .FromFileInput(filePath)
+                        .OutputToFile(outputPath, overwrite: true, options => options
+                            .WithFastStart()
+                            .WithVideoCodec("libx264")
+                            .WithAudioCodec("aac")
+                            .WithCustomArgument($"-af volume={dBLevel}")
+                        )
+                        .ProcessSynchronously();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    OpenExceptionInNotepad(ex.Message);
+                }
+                MessageBox.Show("Done.");
             }
-            catch
+            else
             {
-                MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                try //my first try with error catching.
+                {
+                    FFMpegArguments
+                        .FromFileInput(filePath)
+                        .OutputToFile(outputPath, overwrite: true, options => options
+                            .WithFastStart()
+                            .WithVideoCodec("libx264")
+                            .WithAudioCodec("aac")
+                        )
+                        .ProcessSynchronously();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    OpenExceptionInNotepad(ex.Message);
+                }
+                MessageBox.Show("Done.");
             }
-            MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
         }
 
         private void FFmpegAudioConvert(string filePath, string outputPath, double dBLevel)
@@ -165,9 +236,9 @@ namespace file_converter
                 catch (Exception ex)
                 {
                     MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
-                    MessageBox.Show(ex.Message);
+                    OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                MessageBox.Show("Done.");
             }
             else
             {
@@ -185,9 +256,9 @@ namespace file_converter
                 catch (Exception ex)
                 {
                     MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
-                    MessageBox.Show(ex.Message);
+                    OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
+                MessageBox.Show("Done.");
             }
         }
 
@@ -204,48 +275,7 @@ namespace file_converter
                 //images
                 if (IsImage(filePath))
                 {
-                    using (var img = SixLabors.ImageSharp.Image.Load(filePath))
-                    {
-                        switch (fileFormat) //i don't know why but i'm proud of this.
-                        {
-                            case "jpg":
-                                img.Save(outputPath, new JpegEncoder() { Quality = quality });
-                                if (File.Exists(outputPath))
-                                {
-                                    MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Failed to convert.");
-                                }
-                                break;
-                            case "png":
-                                img.Save(outputPath, new PngEncoder());
-                                if (File.Exists(outputPath))
-                                {
-                                    MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Failed to convert.");
-                                }
-                                break;
-                            case "webp":
-                                img.Save(outputPath, new WebpEncoder());
-                                if (File.Exists(outputPath))
-                                {
-                                    MessageBox.Show("Your converted file has been saved in the same directory as the file you brought here.");
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Failed to convert.");
-                                }
-                                break;
-                            default:
-                                MessageBox.Show("Invalid output format");
-                                return;
-                        }
-                    }
+                    ConvertImage(filePath, outputPath, fileFormat);
                 }
                 //now for the videos
                 if (IsVideo(filePath))
@@ -256,7 +286,6 @@ namespace file_converter
                             MessageBox.Show("Your file is now exporting. Please wait...");
                             FFmpegConvert(filePath, outputPath);
                             break;
-
                         case "mkv":
                             MessageBox.Show("Your file is now exporting. Please wait...");
                             FFmpegConvert(filePath, outputPath);
@@ -272,6 +301,9 @@ namespace file_converter
                     switch (fileFormat)
                     {
                         case "mp3":
+                            FFmpegAudioConvert(filePath, outputPath, dBLevel);
+                            break;
+                        case "wav":
                             FFmpegAudioConvert(filePath, outputPath, dBLevel);
                             break;
                     }
