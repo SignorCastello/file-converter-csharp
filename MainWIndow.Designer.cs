@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Button browse_button;
+            browse_button = new Button();
             listBox1 = new ListBox();
             outputType = new ComboBox();
             textBox1 = new TextBox();
@@ -36,7 +36,6 @@
             Convert = new Button();
             moreOptions = new Button();
             textBox2 = new TextBox();
-            browse_button = new Button();
             SuspendLayout();
             // 
             // browse_button
@@ -175,5 +174,6 @@
         private Button Convert;
         private Button moreOptions;
         private TextBox textBox2;
+        private Button browse_button;
     }
 }

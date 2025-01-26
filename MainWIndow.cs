@@ -37,29 +37,25 @@ namespace file_converter
         {
             moreOptions.Visible = false;
             string locale = CultureInfo.InstalledUICulture.TwoLetterISOLanguageName;
-            if (locale == "en")
-            {
-                CultureInfo = CultureInfo.CreateSpecificCulture("en"); 
-            }
             if (locale == "it")
             {
                 CultureInfo = CultureInfo.CreateSpecificCulture("it");
+                LanguageSet(CultureInfo);
             }
-            LanguageSet(locale);
-        }
-
-        private void LanguageSet(string locale)
-        {
-            if (locale == "en")
+            else
             {
                 CultureInfo = CultureInfo.CreateSpecificCulture("en");
+                LanguageSet(CultureInfo);
             }
-            if (locale == "it")
-            {
-                CultureInfo = CultureInfo.CreateSpecificCulture("it");
-            }
+        }
+
+        private void LanguageSet(CultureInfo CultureInfo)
+        {
             textBox1.Text = ResourceManager.GetString("SelectedFileType", CultureInfo);
             textBox2.Text = ResourceManager.GetString("WindowTitle", CultureInfo);
+            browse_button.Text = ResourceManager.GetString("Browse", CultureInfo);
+            Convert.Text = ResourceManager.GetString("ConvertButtonLabel", CultureInfo);
+            moreOptions.Text = ResourceManager.GetString("MoreOptionsButton", CultureInfo);
         }
 
         private void ListBox1_DragEnter(object sender, DragEventArgs e)
