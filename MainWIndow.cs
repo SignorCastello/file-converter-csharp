@@ -19,7 +19,7 @@ namespace file_converter
         public string? filePath;
         public string file;
         public int quality;
-        public double dBLevel = 0;
+        public double dBLevel;
         public bool hasQualityChanged;
         public bool hasAmplificationChanged;
         public bool IsCurrentFileImage;
@@ -87,7 +87,7 @@ namespace file_converter
                 if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                 {
                     //you selected an image
-                    FileTypeLabel.Text = "IMAGE";
+                    FileTypeLabel.Text = file_converter.Properties.Resources.IMAGE;
                     outputType.Items.AddRange(["JPG", "PNG", "WEBP"]);
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                     {
