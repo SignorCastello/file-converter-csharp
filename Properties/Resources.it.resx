@@ -1,4 +1,4 @@
-
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IMAGE" xml:space="preserve">
-    <value>IMAGE</value>
+    <value>IMMAGINE</value>
   </data>
   <data name="JPG" xml:space="preserve">
     <value>JPG</value>
@@ -142,18 +142,18 @@
     <value>WAV</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Done.</value>
+    <value>Fatto.</value>
   </data>
   <data name="Failed" xml:space="preserve">
-    <value>Failed to convert. Is ffmpeg in PATH?</value>
+    <value>La conversione è fallita. FFMPEG è nel PATH?</value>
   </data>
   <data name="ExportInProgress" xml:space="preserve">
-    <value>Your file is now exporting. Please wait...</value>
+    <value>Il tuo file si sta esportando. Attendi...</value>
   </data>
   <data name="SelectedFileType" xml:space="preserve">
-    <value>The selected file is...</value>
+    <value>Il file selezionato è...</value>
   </data>
   <data name="WindowTitle" xml:space="preserve">
-    <value>FILE CONVERTER</value>
+    <value>CONVERTITORE DI FILE</value>
   </data>
 </root>

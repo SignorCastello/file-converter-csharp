@@ -1,22 +1,22 @@
-using System.Security.Cryptography.X509Certificates;
-using System.Windows.Forms.VisualStyles;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using FFMpegCore;
 using file_converter.Properties;
-using System.Diagnostics.Eventing.Reader;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing.Text;
 using SixLabors.ImageSharp.Formats;
 using System.Diagnostics;
+using System.Globalization;
+using System.Resources;
+using System.Reflection;
 
 
 namespace file_converter
 {
     public partial class MainWIndow : Form
     {
+        ResourceManager ResourceManager;
+        CultureInfo? CultureInfo;
         public string? filePath;
         public string? file;
         public int quality;
@@ -26,14 +26,40 @@ namespace file_converter
         public bool IsCurrentFileImage;
         public bool IsCurrentFileVideo;
         public bool IsCurrentFileAudio;
+
         public MainWIndow()
         {
             InitializeComponent();
+            ResourceManager = new ResourceManager("file_converter.Properties.Resources", typeof(MainWIndow).Assembly);
         }
 
         private void MainWIndow_Load(object sender, EventArgs e)
         {
             moreOptions.Visible = false;
+            string locale = CultureInfo.InstalledUICulture.TwoLetterISOLanguageName;
+            if (locale == "en")
+            {
+                CultureInfo = CultureInfo.CreateSpecificCulture("en"); 
+            }
+            if (locale == "it")
+            {
+                CultureInfo = CultureInfo.CreateSpecificCulture("it");
+            }
+            LanguageSet(locale);
+        }
+
+        private void LanguageSet(string locale)
+        {
+            if (locale == "en")
+            {
+                CultureInfo = CultureInfo.CreateSpecificCulture("en");
+            }
+            if (locale == "it")
+            {
+                CultureInfo = CultureInfo.CreateSpecificCulture("it");
+            }
+            textBox1.Text = ResourceManager.GetString("SelectedFileType", CultureInfo);
+            textBox2.Text = ResourceManager.GetString("WindowTitle", CultureInfo);
         }
 
         private void ListBox1_DragEnter(object sender, DragEventArgs e)
@@ -95,40 +121,40 @@ namespace file_converter
                 if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".jpg" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                 {
                     //you selected an image
-                    FileTypeLabel.Text = file_converter.Properties.Resources.IMAGE;
+                    FileTypeLabel.Text = ResourceManager.GetString("IMAGE", CultureInfo);
                     outputType.Items.AddRange(["JPG", "PNG", "WEBP"]);
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                     {
-                        outputType.Text = Resources.JPG;
+                        outputType.Text = ResourceManager.GetString("JPG", CultureInfo);
                     }
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
                     {
-                        outputType.Text = Resources.PNG;
+                        outputType.Text = ResourceManager.GetString("PNG", CultureInfo);
                     }
                     IsCurrentFileImage = true; //this will be needed for the Options window. I don't know how to make this easier
                 }
                 if (Path.GetExtension(selectedFileName)?.ToLower() == ".mp4" || Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm")
                 {
-                    FileTypeLabel.Text = Resources.VIDEO;
+                    FileTypeLabel.Text = ResourceManager.GetString("VIDEO", CultureInfo);
                     outputType.Items.AddRange(["MP4", "MKV", "AVI"]);
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm" || Path.GetExtension(selectedFileName)?.ToLower() == ".avi")
                     {
-                        outputType.Text = Resources.MP4;
+                        outputType.Text = ResourceManager.GetString("MP4", CultureInfo);
                     }
                     IsCurrentFileVideo = true;
                 }
                 if (MimeTypes.GetMimeType(selectedFileName).StartsWith("audio/"))
                 {
                     //you selected an audio file
-                    FileTypeLabel.Text = Resources.AUDIO;
+                    FileTypeLabel.Text = ResourceManager.GetString("AUDIO", CultureInfo);
                     outputType.Items.AddRange(["MP3", "WAV"]);
                     if (Path.GetExtension(selectedFileName).ToLower() != ".mp3")
                     {
-                        outputType.Text = Resources.MP3;
+                        outputType.Text = ResourceManager.GetString("MP3", CultureInfo);
                     }
                     if (Path.GetExtension(selectedFileName).ToLower() == ".mp3")
                     {
-                        outputType.Text = Resources.WAV;
+                        outputType.Text = ResourceManager.GetString("WAV", CultureInfo);
                     }
                     IsCurrentFileAudio = true;
                 }
@@ -176,7 +202,7 @@ namespace file_converter
                         _ => throw new InvalidOperationException("Unsupported format")
                     };
                     img.Save(outputPath, encoder);
-                    MessageBox.Show("Done.");
+                    MessageBox.Show(ResourceManager.GetString("Done", CultureInfo));
                 }
             }
         }
@@ -199,10 +225,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Resources.Failed);
+                    MessageBox.Show(ResourceManager.GetString("Failed", CultureInfo));
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show(Resources.Done);
+                MessageBox.Show(ResourceManager.GetString("Done", CultureInfo));
             }
             else
             {
@@ -219,10 +245,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Resources.Failed);
+                    MessageBox.Show(ResourceManager.GetString("Failed", CultureInfo));
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show(Resources.Done);
+                MessageBox.Show(ResourceManager.GetString("Done", CultureInfo));
             }
         }
 
@@ -243,10 +269,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Resources.Failed);
+                    MessageBox.Show(ResourceManager.GetString("Failed", CultureInfo));
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show(Resources.Done);
+                MessageBox.Show(ResourceManager.GetString("Done", CultureInfo));
             }
             else
             {
@@ -263,10 +289,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Resources.Failed);
+                    MessageBox.Show(ResourceManager.GetString("Failed", CultureInfo));
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show(Resources.Done);
+                MessageBox.Show(ResourceManager.GetString("Done", CultureInfo));
             }
         }
 

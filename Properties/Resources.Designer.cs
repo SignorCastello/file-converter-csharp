@@ -142,6 +142,15 @@ namespace file_converter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The selected file is....
+        /// </summary>
+        internal static string SelectedFileType {
+            get {
+                return ResourceManager.GetString("SelectedFileType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VIDEO.
         /// </summary>
         internal static string VIDEO {
@@ -156,6 +165,15 @@ namespace file_converter.Properties {
         internal static string WAV {
             get {
                 return ResourceManager.GetString("WAV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FILE CONVERTER.
+        /// </summary>
+        internal static string WindowTitle {
+            get {
+                return ResourceManager.GetString("WindowTitle", resourceCulture);
             }
         }
     }
