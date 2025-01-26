@@ -61,11 +61,101 @@ namespace file_converter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AUDIO.
+        /// </summary>
+        internal static string AUDIO {
+            get {
+                return ResourceManager.GetString("AUDIO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done..
+        /// </summary>
+        internal static string Done {
+            get {
+                return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your file is now exporting. Please wait....
+        /// </summary>
+        internal static string ExportInProgress {
+            get {
+                return ResourceManager.GetString("ExportInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert. Is ffmpeg in PATH?.
+        /// </summary>
+        internal static string Failed {
+            get {
+                return ResourceManager.GetString("Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IMAGE.
         /// </summary>
         internal static string IMAGE {
             get {
                 return ResourceManager.GetString("IMAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JPG.
+        /// </summary>
+        internal static string JPG {
+            get {
+                return ResourceManager.GetString("JPG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MP3.
+        /// </summary>
+        internal static string MP3 {
+            get {
+                return ResourceManager.GetString("MP3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MP4.
+        /// </summary>
+        internal static string MP4 {
+            get {
+                return ResourceManager.GetString("MP4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PNG.
+        /// </summary>
+        internal static string PNG {
+            get {
+                return ResourceManager.GetString("PNG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIDEO.
+        /// </summary>
+        internal static string VIDEO {
+            get {
+                return ResourceManager.GetString("VIDEO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WAV.
+        /// </summary>
+        internal static string WAV {
+            get {
+                return ResourceManager.GetString("WAV", resourceCulture);
             }
         }
     }

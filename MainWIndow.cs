@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using FFMpegCore;
+using file_converter.Properties;
 using System.Diagnostics.Eventing.Reader;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Text;
@@ -17,7 +18,7 @@ namespace file_converter
     public partial class MainWIndow : Form
     {
         public string? filePath;
-        public string file;
+        public string? file;
         public int quality;
         public double dBLevel;
         public bool hasQualityChanged;
@@ -35,42 +36,49 @@ namespace file_converter
             moreOptions.Visible = false;
         }
 
-        private void listBox1_DragEnter(object sender, DragEventArgs e)
+        private void ListBox1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if(e.Data != null)
             {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
             }
         }
 
-        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        private void ListBox1_DragDrop(object sender, DragEventArgs e)
         {
             string[]? files = null;
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data != null)
             {
-                files = e.Data.GetData(DataFormats.FileDrop) as string[];
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    files = e.Data.GetData(DataFormats.FileDrop) as string[];
+                }
+                if(files != null)
+                {
+                    foreach (string file in files)
+                    {
+                        string fileName = Path.GetFileName(file);
+                        filePath = Path.GetFullPath(file);
+                        listBox1.Items.Add(fileName);
+                    }
+                }
             }
-            foreach (string file in files)
-            {
-                string fileName = Path.GetFileName(file);
-                filePath = Path.GetFullPath(file);
-                listBox1.Items.Add(fileName);
-            }
-
         }
 
-        private void OpenExceptionInNotepad(string content)
+        private static void OpenExceptionInNotepad(string content)
         {
-            string tempFilePath = Path.Combine(Path.GetTempPath(), "converterlog.txt");
-            File.WriteAllText(tempFilePath, content);
-            Process.Start("notepad.exe", tempFilePath);
+            File.WriteAllText(Path.Combine(Path.GetTempPath(), "converterlog.txt"), content);
+            Process.Start("notepad.exe", Path.Combine(Path.GetTempPath(), "converterlog.txt"));
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             IsCurrentFileImage = false;
             IsCurrentFileVideo = false;
@@ -91,43 +99,43 @@ namespace file_converter
                     outputType.Items.AddRange(["JPG", "PNG", "WEBP"]);
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".png" || Path.GetExtension(selectedFileName)?.ToLower() == ".webp")
                     {
-                        outputType.Text = "JPG";
+                        outputType.Text = Resources.JPG;
                     }
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".jpg")
                     {
-                        outputType.Text = "PNG";
+                        outputType.Text = Resources.PNG;
                     }
                     IsCurrentFileImage = true; //this will be needed for the Options window. I don't know how to make this easier
                 }
                 if (Path.GetExtension(selectedFileName)?.ToLower() == ".mp4" || Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm")
                 {
-                    FileTypeLabel.Text = "VIDEO";
+                    FileTypeLabel.Text = Resources.VIDEO;
                     outputType.Items.AddRange(["MP4", "MKV", "AVI"]);
                     if (Path.GetExtension(selectedFileName)?.ToLower() == ".mkv" || Path.GetExtension(selectedFileName)?.ToLower() == ".webm" || Path.GetExtension(selectedFileName)?.ToLower() == ".avi")
                     {
-                        outputType.Text = "MP4";
+                        outputType.Text = Resources.MP4;
                     }
                     IsCurrentFileVideo = true;
                 }
                 if (MimeTypes.GetMimeType(selectedFileName).StartsWith("audio/"))
                 {
                     //you selected an audio file
-                    FileTypeLabel.Text = "AUDIO";
+                    FileTypeLabel.Text = Resources.AUDIO;
                     outputType.Items.AddRange(["MP3", "WAV"]);
                     if (Path.GetExtension(selectedFileName).ToLower() != ".mp3")
                     {
-                        outputType.Text = "MP3";
+                        outputType.Text = Resources.MP3;
                     }
                     if (Path.GetExtension(selectedFileName).ToLower() == ".mp3")
                     {
-                        outputType.Text = "MP3";
+                        outputType.Text = Resources.WAV;
                     }
                     IsCurrentFileAudio = true;
                 }
             }
         }
 
-        private bool IsImage(string filePath)
+        private static bool IsImage(string filePath)
         {
             if (MimeTypes.GetMimeType(filePath).StartsWith("image/"))
             {
@@ -136,7 +144,7 @@ namespace file_converter
             return false;
         }
 
-        private bool IsVideo(string filePath)
+        private static bool IsVideo(string filePath)
         {
             if (MimeTypes.GetMimeType(filePath).StartsWith("video/"))
             {
@@ -145,7 +153,7 @@ namespace file_converter
             return false;
         }
 
-        private bool IsAudio(string filePath)
+        private static bool IsAudio(string filePath)
         {
             if (MimeTypes.GetMimeType(filePath).StartsWith("audio/"))
             {
@@ -191,10 +199,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    MessageBox.Show(Resources.Failed);
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show("Done.");
+                MessageBox.Show(Resources.Done);
             }
             else
             {
@@ -211,10 +219,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    MessageBox.Show(Resources.Failed);
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show("Done.");
+                MessageBox.Show(Resources.Done);
             }
         }
 
@@ -235,10 +243,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    MessageBox.Show(Resources.Failed);
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show("Done.");
+                MessageBox.Show(Resources.Done);
             }
             else
             {
@@ -255,10 +263,10 @@ namespace file_converter
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to convert. Is ffmpeg in PATH?");
+                    MessageBox.Show(Resources.Failed);
                     OpenExceptionInNotepad(ex.Message);
                 }
-                MessageBox.Show("Done.");
+                MessageBox.Show(Resources.Done);
             }
         }
 
@@ -283,15 +291,15 @@ namespace file_converter
                     switch (fileFormat)
                     {
                         case "mp4":
-                            MessageBox.Show("Your file is now exporting. Please wait...");
+                            MessageBox.Show(Resources.ExportInProgress);
                             FFmpegConvert(filePath, outputPath);
                             break;
                         case "mkv":
-                            MessageBox.Show("Your file is now exporting. Please wait...");
+                            MessageBox.Show(Resources.ExportInProgress);
                             FFmpegConvert(filePath, outputPath);
                             break;
                         case "avi":
-                            MessageBox.Show("Your file is now exporting. Please wait...");
+                            MessageBox.Show(Resources.ExportInProgress);
                             FFmpegConvert(filePath, outputPath);
                             break;
                     }

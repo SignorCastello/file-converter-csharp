@@ -63,9 +63,9 @@
             listBox1.Name = "listBox1";
             listBox1.Size = new Size(284, 346);
             listBox1.TabIndex = 0;
-            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
-            listBox1.DragDrop += listBox1_DragDrop;
-            listBox1.DragEnter += listBox1_DragEnter;
+            listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
+            listBox1.DragDrop += ListBox1_DragDrop;
+            listBox1.DragEnter += ListBox1_DragEnter;
             // 
             // outputType
             // 

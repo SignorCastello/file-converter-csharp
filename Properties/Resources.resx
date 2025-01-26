@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,5 +119,35 @@
   </resheader>
   <data name="IMAGE" xml:space="preserve">
     <value>IMAGE</value>
+  </data>
+  <data name="JPG" xml:space="preserve">
+    <value>JPG</value>
+  </data>
+  <data name="PNG" xml:space="preserve">
+    <value>PNG</value>
+  </data>
+  <data name="VIDEO" xml:space="preserve">
+    <value>VIDEO</value>
+  </data>
+  <data name="MP4" xml:space="preserve">
+    <value>MP4</value>
+  </data>
+  <data name="AUDIO" xml:space="preserve">
+    <value>AUDIO</value>
+  </data>
+  <data name="MP3" xml:space="preserve">
+    <value>MP3</value>
+  </data>
+  <data name="WAV" xml:space="preserve">
+    <value>WAV</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Done.</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Failed to convert. Is ffmpeg in PATH?</value>
+  </data>
+  <data name="ExportInProgress" xml:space="preserve">
+    <value>Your file is now exporting. Please wait...</value>
   </data>
 </root>
