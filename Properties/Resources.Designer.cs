@@ -70,6 +70,24 @@ namespace file_converter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse....
+        /// </summary>
+        internal static string Browse {
+            get {
+                return ResourceManager.GetString("Browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CONVERT!.
+        /// </summary>
+        internal static string ConvertButtonLabel {
+            get {
+                return ResourceManager.GetString("ConvertButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done..
         /// </summary>
         internal static string Done {
@@ -111,6 +129,15 @@ namespace file_converter.Properties {
         internal static string JPG {
             get {
                 return ResourceManager.GetString("JPG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options....
+        /// </summary>
+        internal static string MoreOptionsButton {
+            get {
+                return ResourceManager.GetString("MoreOptionsButton", resourceCulture);
             }
         }
         

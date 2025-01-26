@@ -156,4 +156,13 @@
   <data name="WindowTitle" xml:space="preserve">
     <value>CONVERTITORE DI FILE</value>
   </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Sfoglia...</value>
+  </data>
+  <data name="ConvertButtonLabel" xml:space="preserve">
+    <value>CONVERTI!</value>
+  </data>
+  <data name="MoreOptionsButton" xml:space="preserve">
+    <value>Opzioni...</value>
+  </data>
 </root>
